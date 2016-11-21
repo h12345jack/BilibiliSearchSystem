@@ -49,10 +49,15 @@ create table query_table(
 ) charset=utf8;
 
 create table need_crawl_url(
+    aid char(10),
     url varchar(1000),
     create_time int,
     finished_time int default 0
-)
+)charset=utf8;
+
+create table video_data(
+    
+)charset=utf8;
 ```
 ## 数据分析
 

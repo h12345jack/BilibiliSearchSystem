@@ -9,6 +9,9 @@
 #     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 
+
+import logging
+
 BOT_NAME = 'bilibili'
 
 SPIDER_MODULES = ['bilibili.spiders']
@@ -27,7 +30,7 @@ ROBOTSTXT_OBEY = True
 # Configure a delay for requests for the same website (default: 0)
 # See http://scrapy.readthedocs.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-#DOWNLOAD_DELAY = 3
+DOWNLOAD_DELAY = 0.5
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -66,10 +69,24 @@ DEFAULT_REQUEST_HEADERS = {
 
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'bilibili.pipelines.SomePipeline': 300,
-#}
+ITEM_PIPELINES = {
+   'bilibili.pipelines.ValidatePipeline': 300,
+   'bilibili.pipelines.XMLDownloadPipline': 400,
+   'bilibili.pipelines.JsonWriterPipeline': 500,
+}
 
+MYSQL_CONFIG = {
+    'HOST': "127.0.0.1",
+    'USERNAME':'root',
+    'PASSWORD':'admin',
+    'DBNAME':'XFS_DB',
+}
+
+LOG_FILE = 'log.txt'
+
+LOG_LEVEL = logging.INFO
+
+XML_DIR = 'xml_dir'
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
 #AUTOTHROTTLE_ENABLED = True
