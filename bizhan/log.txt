@@ -1,0 +1,61 @@
+2016-11-22 00:46:41 [scrapy] INFO: Scrapy 1.2.1 started (bot: bilibili)
+2016-11-22 00:46:41 [scrapy] INFO: Overridden settings: {'NEWSPIDER_MODULE': 'bilibili.spiders', 'ROBOTSTXT_OBEY': True, 'LOG_LEVEL': 20, 'SPIDER_MODULES': ['bilibili.spiders'], 'BOT_NAME': 'bilibili', 'USER_AGENT': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36', 'LOG_FILE': 'log.txt', 'DOWNLOAD_DELAY': 0.5}
+2016-11-22 00:46:41 [scrapy] INFO: Enabled extensions:
+['scrapy.extensions.logstats.LogStats',
+ 'scrapy.extensions.telnet.TelnetConsole',
+ 'scrapy.extensions.corestats.CoreStats']
+2016-11-22 00:46:41 [scrapy] INFO: Enabled downloader middlewares:
+['scrapy.downloadermiddlewares.robotstxt.RobotsTxtMiddleware',
+ 'scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
+ 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
+ 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
+ 'scrapy.downloadermiddlewares.chunked.ChunkedTransferMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats']
+2016-11-22 00:46:41 [scrapy] INFO: Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+2016-11-22 00:46:41 [scrapy] INFO: Enabled item pipelines:
+['bilibili.pipelines.ValidatePipeline',
+ 'bilibili.pipelines.XMLDownloadPipline',
+ 'bilibili.pipelines.JsonWriterPipeline']
+2016-11-22 00:46:41 [scrapy] INFO: Spider opened
+2016-11-22 00:46:41 [scrapy] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2016-11-22 00:46:44 [requests.packages.urllib3.connectionpool] INFO: Starting new HTTP connection (1): api.bilibili.com
+2016-11-22 00:46:44 [requests.packages.urllib3.connectionpool] INFO: Starting new HTTP connection (1): api.bilibili.com
+2016-11-22 00:46:44 [requests.packages.urllib3.connectionpool] INFO: Starting new HTTP connection (1): comment.bilibili.com
+2016-11-22 00:46:45 [requests.packages.urllib3.connectionpool] INFO: Starting new HTTP connection (1): api.bilibili.com
+2016-11-22 00:46:45 [requests.packages.urllib3.connectionpool] INFO: Starting new HTTP connection (1): api.bilibili.com
+2016-11-22 00:46:45 [requests.packages.urllib3.connectionpool] INFO: Starting new HTTP connection (1): comment.bilibili.com
+2016-11-22 00:46:46 [requests.packages.urllib3.connectionpool] INFO: Starting new HTTP connection (1): api.bilibili.com
+2016-11-22 00:46:46 [requests.packages.urllib3.connectionpool] INFO: Starting new HTTP connection (1): api.bilibili.com
+2016-11-22 00:46:46 [requests.packages.urllib3.connectionpool] INFO: Starting new HTTP connection (1): comment.bilibili.com
+2016-11-22 00:46:46 [scrapy] INFO: Closing spider (finished)
+2016-11-22 00:46:46 [scrapy] INFO: Dumping Scrapy stats:
+{'downloader/request_bytes': 2401,
+ 'downloader/request_count': 6,
+ 'downloader/request_method_count/GET': 6,
+ 'downloader/response_bytes': 41816,
+ 'downloader/response_count': 6,
+ 'downloader/response_status_count/200': 5,
+ 'downloader/response_status_count/301': 1,
+ 'finish_reason': 'finished',
+ 'finish_time': datetime.datetime(2016, 11, 21, 16, 46, 46, 596814),
+ 'item_scraped_count': 3,
+ 'log_count/INFO': 16,
+ 'request_depth_max': 1,
+ 'response_received_count': 5,
+ 'scheduler/dequeued': 5,
+ 'scheduler/dequeued/memory': 5,
+ 'scheduler/enqueued': 5,
+ 'scheduler/enqueued/memory': 5,
+ 'start_time': datetime.datetime(2016, 11, 21, 16, 46, 41, 790536)}
+2016-11-22 00:46:46 [scrapy] INFO: Spider closed (finished)
