@@ -160,14 +160,17 @@ class BilispiderSpider(scrapy.Spider):
         data.append(content)
         json_data = json.loads(content)
         try:
-            num = json_data["data"]["page"]["num"]
+            counts = json_data["data"]["page"]["count"]
+            size = json_data["data"]["page"]["size"]
+            num = int(int(counts)*1.0/int(size))
+
             for pn in range(2, int(num)+1):
                 url = ("http://api.bilibili.com/x/v2/reply?"
                        "jsonp=jsonp&type=1&sort=0"
                        "&oid={}&pn={}&nohot=1").format(aid, pn)
                 content = requests.get(url).content
                 data.append(content)
-            return data
+            return json.dumps(data)
         except Exception as e:
             self.logger.critical(e)
 
