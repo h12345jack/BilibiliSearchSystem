@@ -9,9 +9,9 @@ import os
 import re
 import logging
 import time
+import hashlib
 
 import requests
-
 
 from sqlalchemy.orm import sessionmaker
 from scrapy.utils.project import get_project_settings
@@ -53,6 +53,20 @@ class XMLDownloadPipline(object):
 
         fpath = os.path.join(xml_dir, filename)
         with open(fpath, 'w') as f:
+            f.write(requests.get(url).content)
+
+        metadata_dir =settings["METADATA_DIR"]
+
+        if not os.path.exists(metadata_dir):
+            os.mkdir(metadata_dir)
+
+        appkey = settings['APPKEY']
+        SECRETKEY_MINILOADER = settings["SECRETKEY_MINILOADER"]
+        sign_this = hashlib.md5('cid={cid}&player=1{SECRETKEY_MINILOADER}'.format(cid = cid, SECRETKEY_MINILOADER = SECRETKEY_MINILOADER)).hexdigest()
+        url = 'http://interface.bilibili.com/playurl?&cid=' + cid + '&player=1' + '&sign=' + sign_this
+        
+        fpath = os.path.join(metadata_dir,filename)
+        with open(fpath,'w') as f:
             f.write(requests.get(url).content)
 
         return item
