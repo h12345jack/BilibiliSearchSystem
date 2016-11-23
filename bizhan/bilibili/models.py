@@ -16,8 +16,7 @@ def db_connect():
             "mysql://"+MYSQL_CONFIG["USERNAME"]+\
             ":"+MYSQL_CONFIG["PASSWORD"]+\
             "@"+MYSQL_CONFIG["HOST"]+\
-            "/"+MYSQL_CONFIG["DBNAME"]+"?charset=utf8",
-            pool_size=20, max_overflow=30,encoding='utf8')
+            "/"+MYSQL_CONFIG["DBNAME"]+"?charset=utf8")
 
 
 def create_video_info_table(engine):
@@ -41,8 +40,7 @@ class Videos(Base):
     info         = Column(String(2000))
     upinfo       = Column(String(2000))
     video_info   = Column(String(2000))
-    tag_list    = Column(String(1000))
-    comments    = Column(Text)
+    tag_list    = Column(String(2000))
     stats       = Column(Text)
     
     

@@ -101,7 +101,6 @@ class BilispiderSpider(scrapy.Spider):
         if len(m) == 1:
             item["cid"] = m[0][0]
             item["aid"] = m[0][1]
-            item["comments"] = self.extract_comments(sel, item["aid"])
             item["stats"] = self.extract_stats(sel, item["aid"])
 
         return item
@@ -151,29 +150,7 @@ class BilispiderSpider(scrapy.Spider):
         tag_list_xpath = '//div[@class="v_info"]'
         data = ''.join(sel.xpath(tag_list_xpath).extract())
         return self.remove_space(data)
-
-    def extract_comments(self, sel, aid):
-        data = []
-        url = ("http://api.bilibili.com/x/v2/reply?"
-               "jsonp=jsonp&type=1&sort=0&oid={}&pn=1&nohot=1").format(aid)
-        content = requests.get(url).content
-        data.append(content)
-        json_data = json.loads(content)
-        try:
-            counts = json_data["data"]["page"]["count"]
-            size = json_data["data"]["page"]["size"]
-            num = int(int(counts)*1.0/int(size))
-
-            for pn in range(2, int(num)+1):
-                url = ("http://api.bilibili.com/x/v2/reply?"
-                       "jsonp=jsonp&type=1&sort=0"
-                       "&oid={}&pn={}&nohot=1").format(aid, pn)
-                content = requests.get(url).content
-                data.append(content)
-            return json.dumps(data)
-        except Exception as e:
-            self.logger.critical(e)
-
+        
     def extract_stats(self, sel, aid):
         settings = get_project_settings()
         url = ("http://api.bilibili.com/archive_stat/stat"

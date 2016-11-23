@@ -36,6 +36,48 @@ class ValidatePipeline(object):
     def update_mysqldb(self, cid):
         pass
 
+class CommentsDownloadPipline(object):
+
+    '''评论信息下载'''
+
+    def process_item(self,item,spider):
+        aid = item["aid"]
+        filename = aid + '.json'
+        settings = get_project_settings()
+        comments_dir = settings["COMMNETS_DIR"] 
+        if not os.path.exists(comments_dir):
+            os.mkdir(comments_dir)
+
+        fpath = os.path.join(comments_dir, filename)
+        if not os.path.exists(fpath):
+            data = self.Comments_content(aid)
+            with open(fpath,'w') as f:
+                f.write(data)
+
+        return item
+
+
+    def Comments_content(self,aid):
+        data = []
+        url = ("http://api.bilibili.com/x/v2/reply?"
+               "jsonp=jsonp&type=1&sort=0&oid={}&pn=1&nohot=1").format(aid)
+        content = requests.get(url).content
+        data.append(content)
+        json_data = json.loads(content)
+
+        counts = json_data["data"]["page"]["count"]
+        size = json_data["data"]["page"]["size"]
+        num = int(int(counts)*1.0/int(size))
+
+        for pn in range(2, num+1):
+            url = ("http://api.bilibili.com/x/v2/reply?"
+                   "jsonp=jsonp&type=1&sort=0"
+                   "&oid={}&pn={}&nohot=1").format(aid, pn)
+            content = requests.get(url).content
+            data.append(content)
+        return json.dumps(data)
+
+
 
 class XMLDownloadPipline(object):
 
@@ -85,36 +127,41 @@ class JsonWriterPipeline(object):
         return item
 
 class MySQLWriterPipeline(object):
+
     def __init__(self):
         self.engine = db_connect()
-        Session = sessionmaker(bind=self.engine)
+        self.Session = sessionmaker(bind=self.engine)
         create_video_info_table(self.engine)
-        self.session = Session()
     
     def process_item(self, item, spider):
         m = re.findall(r"[0-9]+",item["url"])
         item['k_id'] = '_'.join(m)
         instance = Videos(**item)
-        
-        self.session.merge(instance)
+
+        session = self.Session()
 
         try:
-            self.session.commit()
-        except InvalidRequestError as e:
-            self.session.rollback()
-            logging.info(e)
-        except IntegrityError as e:
-            self.session.rollback()
-            # logging.debug(e)
+            session.merge(instance)
+            session.commit()
         except Exception as e:
-            self.session.rollback()
+            session.rollback()
             logging.info(e)
         else:
             logging.info('news pipe %s' % item.get('k_id'))
-            return item
+        finally:
+            session.close()
+
         aid = item["aid"]
         sql = "update need_crawl_url SET finished_time="+str(time.time())
         sql = sql + ' where aid='+aid
+        
         connection = self.engine.connect()
         connection.execute(sql)
+        connection.close()
+
+        return item
+
+    # def __del__(self):
+    #     self.session.close()
+
         

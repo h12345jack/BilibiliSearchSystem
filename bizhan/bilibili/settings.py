@@ -72,8 +72,9 @@ DEFAULT_REQUEST_HEADERS = {
 ITEM_PIPELINES = {
    'bilibili.pipelines.ValidatePipeline'   : 300,
    'bilibili.pipelines.XMLDownloadPipline' : 400,
-   # 'bilibili.pipelines.JsonWriterPipeline' : 500,
-  'bilibili.pipelines.MySQLWriterPipeline' : 600,
+   'bilibili.pipelines.CommentsDownloadPipline' : 500,
+   # 'bilibili.pipelines.JsonWriterPipeline' : 600,
+   'bilibili.pipelines.MySQLWriterPipeline' : 700,
 }
 
 MYSQL_CONFIG = {
@@ -89,7 +90,9 @@ LOG_LEVEL = logging.INFO
 
 XML_DIR = 'xml_dir'
 
-METADAT_DIR = 'metadata_dir'
+METADATA_DIR = 'metadata_dir'
+
+COMMNETS_DIR = 'comments_dir'
 
 APPKEY = 'f3bb208b3d081dc8'
 

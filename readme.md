@@ -102,3 +102,10 @@ create table need_crawl_url(
 ### 可视化部分
 
 ### 检索页面 
+
+### 其他
+之前一直遇到“OperationalError (2006, 'MySQL server has gone away')”的错误，改了很多方法，包括
+[SQLAlchemy error MySQL server has gone away](http://stackoverflow.com/questions/16341911/sqlalchemy-error-mysql-server-has-gone-away)
+[avoiding-mysql-server-has-gone-away-on-infrequently-used-python-flask-server](http://stackoverflow.com/questions/6471549/avoiding-mysql-server-has-gone-away-on-infrequently-used-python-flask-server)最后却是MYSQL的设置的问题导致的超时。
+[Error 2006: “MySQL server has gone away” using Python, Bottle Microframework and Apache](http://stackoverflow.com/questions/12444272/error-2006-mysql-server-has-gone-away-using-python-bottle-microframework-and)
+

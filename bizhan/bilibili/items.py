@@ -28,6 +28,5 @@ class BilibiliItem(scrapy.Item):
     upinfo      = Field()
     video_info  = Field()
     tag_list    = Field()
-    comments    = Field()
     stats       = Field()
 
