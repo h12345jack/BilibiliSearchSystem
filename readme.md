@@ -41,10 +41,19 @@ UPDATE need_crawl_url(aid,url,create_time) SELECT aid,video_url,crawler_time FRO
 3. query_word: 人工筛选其他的表达黄婷婷的单词
 4. 
 ### 视频数据
+事实上，开始的抓取的部分是没有视频的元数据的，而只有UCG的数据。这对于项目而言有巨大的打击。
+因此我需要包含我抓取的视频的元数据的信息，这个部分是需要进行解析地址的。
+而我参看了[哔哩哔哩真实视频地址解析-初探](#citation)和[you-get](#citation)的bilibili部分，使用了其包含的APPKEY和编码方法。
+大体上获取了元数据的信息。timelength是该元素最重要的信息，是以0.001s为单位的时间信息。
 
 ### 爬虫思路
 写一个获取要抓取的url列表，放在数据库中。
 scrapy爬虫从数据库中读取需要抓取的url，并且将这个url放到start_urls列表中，开始抓取。
+
+### 爬虫框架
+本次爬虫的部分的框架Scrapy图为
+![](http://ww2.sinaimg.cn/large/006C73MUjw1fa2642jsg5j30jg0dq40c.jpg)
+而在我的具体的实现的过程中。
 
 ### url列表的获取办法：
 1. query
@@ -79,19 +88,26 @@ create table need_crawl_url(
 
 首先需要对于xml文件进行一定程度的解读
 ```
-<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.bilibili.com</chatserver><chatid>9728464</chatid><mission>0</mission><maxlimit>1000</maxlimit><source>e-r</source><ds>2367399877</ds><de>2367399877</de><max_count>1000</max_count><d p="241.298,5,25,16707842,1472831971,0,5d2ce950,2367399877">啊黄的泪颜我来承包</d>
+<?xml version="1.0" encoding="UTF-8"?>
+<i><chatserver>chat.bilibili.com</chatserver><chatid>9728464</chatid><mission>0</mission><maxlimit>1000</maxlimit><source>e-r</source><ds>2367399877</ds><de>2367399877</de><max_count>1000</max_count>
+<d p="241.298,5,25,16707842,1472831971,0,5d2ce950,2367399877">啊黄的泪颜我来承包</d>
 </i>
 ```
-在上述的例子中,根据相关网站[弹幕信息](#c1)。
+在上述的例子中,根据相关网站[弹幕信息](#citation)。
 <d>标签确定了一个弹幕信息，text部分显然是数据
 第一项是弹幕所在时间，单位为秒。
 第二项是弹幕类型，其中:
 
 1.  1~3 为滚动弹幕
+
 2.  4 为底端弹幕
+
 3.  5 为顶端弹幕
+
 4.  6 为逆向弹幕
+
 5.  7 为精确弹幕
+
 6.  8 为高级弹幕。
 
 第三项是弹幕字体大小，其中 25 为中，18 为小。
@@ -110,9 +126,21 @@ create table need_crawl_url(
 
 
 ### 统计信息
-本次爬虫的部分
+有多少个视频
+这些视频的子视频切分情况
+这些视频的UP主的信息是怎么样的
+这些视频的view,danmaku,reply,favorite,coin,share的情况是怎么样的分布
+
+弹幕的分布情况，类型，颜色
+
+弹幕的文本分析，朴素贝叶斯分类器
+弹幕文本情感识别 (需要相关预料信息)
+
 
 ### 可视化
+首先可视化一个snh48总选的html页面？
+然后选择一个人
+
 
 ### 机器学习
 
@@ -125,6 +153,10 @@ create table need_crawl_url(
 ### 可视化部分
 
 ### 检索页面 
+检索使用的工具是[Whoosh](https://pypi.python.org/pypi/Whoosh/)
+该检索工具包含了全文检索，
+检索包括：评论信息、弹幕检索
+返回检索结果。
 
 ### 其他
 之前一直遇到“OperationalError (2006, 'MySQL server has gone away')”的错误，改了很多方法，包括
@@ -134,5 +166,6 @@ create table need_crawl_url(
 
 关于数据结构问题，确实存在冗余，但是为了更简单一些后面的处理，容纳这些数据的冗余的问题。
 
-#参考信息
-[<span id="c1">1</span>].[弹幕信息](https://lintmx.com/bi-li-bi-li-dan-mu-fen-xi/):https://lintmx.com/bi-li-bi-li-dan-mu-fen-xi/
+#<span id="#citation">参考信息</span>
+[1].[弹幕信息](https://lintmx.com/bi-li-bi-li-dan-mu-fen-xi/):https://lintmx.com/bi-li-bi-li-dan-mu-fen-xi/
+[2]. [哔哩哔哩真实视频地址解析-初探](http://blog.csdn.net/qyvlik/article/details/49473489)
