@@ -33,6 +33,7 @@ http://www.bilibili.com/sp/%E9%BB%84%E5%A9%B7%E5%A9%B7
 
 其包含了视频中包含TAG的href，然后将这个href放到需要抓取的url表中，
 ```SQL
+INSERT IGNORE INTO need_crawl_url(aid,url,create_time) SELECT aid,video_url,crawler_time FROM query_table;
 ```
 然后```python run_spider.py```便能够实现第一轮抓取，进一步的将人工筛选的query_tag进行query进一步得到query_table的数据，然后再将query_table放到need_crawl_url的表中，再启动爬虫，从need_crawl_url中抓取。可以循环进行，但是在本次项目中，最后的部分，应该包括如下：
 1. sp:黄婷婷
