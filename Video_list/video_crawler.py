@@ -161,6 +161,26 @@ def crawler_special(keyword):
             f.write(content)
 
 
+def extract_url_from_sp():
+    sp_f = file("sp_url.sql",'w')
+    print>>sp_f,"USE XFS_DB;"
+    f_list = [os.path.join(QUERY_SP,i) for i in os.listdir(QUERY_SP)]
+    for fname in f_list:
+        with codecs.open(fname) as f:
+            html = lxml.html.fromstring(f.read())
+            href_xpath = '//div[@class="v"]/a/@href'
+            for href in html.xpath(href_xpath):
+                if href.find("http://www.bilibili.com") == -1:
+                    href = "http://www.bilibili.com" + href
+                aid = "".join(re.findall(r'av([0-9]*)',href))
+                sql = ('INSERT INTO need_crawl_url(aid,url,create_time)'
+                      'VALUES("{}","{}","{}")ON DUPLICATE KEY UPDATE create_time={};')\
+                      .format(aid,href,int(time.time()),int(time.time()))
+                print>>sp_f,sql
+    print>>sp_f,"INSERT IGNORE INTO need_crawl_url(aid,url,create_time) SELECT aid,video_url,crawler_time FROM query_table;"   
+    print 'sp_url.sql compelete!'
+
+
 def download_img():
     '''
     纯个人爱好问题，然后上传到微博。
@@ -177,21 +197,15 @@ def download_img():
                     img_f.write(requests.get(i).content)
                 print img_fname, ' download!'
 
-def extract_url_from_sp():
-    sp_f = file("sp_url.txt",'w')
-    f_list = [os.path.join(QUERY_SP,i) for i in os.listdir(QUERY_SP)]
-    for fname in f_list:
-        with codecs.open(fname) as f:
-            html = lxml.html.fromstring(f.read())
-            href_xpath = '//div[@class="v"]/a/@href'
-            for href in html.xpath(href_xpath):
-                if href.find("http://www.bilibili.com") == -1:
-                    href = "http://www.bilibili.com" + href
-                print>>sp_f,href    
+def main():
+    keyword = [u"黄婷婷"]
+    for k in keyword:
+        crawler_keyword(k)
+    
+    sp_list = [u"黄婷婷"]
+    for sp in keyword:
+        crawler_special(u"黄婷婷")
+    extract_url_from_sp()
 
 if __name__ == '__main__':
-    crawler_keyword(u"黄婷婷")
-    # extract_url_from_sp()
-    # extract_keyword("./query_keyword/黄婷婷_1.jsonline")
-
-    # crawler_speical(u"黄婷婷")
+    extract_url_from_sp()
