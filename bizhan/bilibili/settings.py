@@ -43,10 +43,10 @@ DOWNLOAD_DELAY = 0.5
 
 # Override the default request headers:
 DEFAULT_REQUEST_HEADERS = {
-  'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-  'Accept-Language': 'zh-CN,zh;q=0.8,en;q=0.6',
-  'Accept-Encoding': 'gzip, deflate, sdch',
-  'Cache-Control':'max-age=0'
+  'Accept'          : 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+  'Accept-Language' : 'zh-CN,zh;q=0.8,en;q=0.6',
+  'Accept-Encoding' : 'gzip, deflate, sdch',
+  'Cache-Control'   :'max-age=0'
 }
 
 # Enable or disable spider middlewares
@@ -70,16 +70,17 @@ DEFAULT_REQUEST_HEADERS = {
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'bilibili.pipelines.ValidatePipeline': 300,
-   'bilibili.pipelines.XMLDownloadPipline': 400,
-   'bilibili.pipelines.JsonWriterPipeline': 500,
+   'bilibili.pipelines.ValidatePipeline'   : 300,
+   'bilibili.pipelines.XMLDownloadPipline' : 400,
+   # 'bilibili.pipelines.JsonWriterPipeline' : 500,
+  'bilibili.pipelines.MySQLWriterPipeline' : 600,
 }
 
 MYSQL_CONFIG = {
-    'HOST': "127.0.0.1",
-    'USERNAME':'root',
-    'PASSWORD':'admin',
-    'DBNAME':'XFS_DB',
+    'HOST'     : '127.0.0.1',
+    'USERNAME' : 'root',
+    'PASSWORD' : 'admin',
+    'DBNAME'   : 'XFS_DB',
 }
 
 LOG_FILE = 'log.txt'
@@ -87,6 +88,7 @@ LOG_FILE = 'log.txt'
 LOG_LEVEL = logging.INFO
 
 XML_DIR = 'xml_dir'
+
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
 #AUTOTHROTTLE_ENABLED = True

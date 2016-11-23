@@ -9,6 +9,7 @@
 ### 检索字段
 
 http://search.bilibili.com/
+
 Bilibili的检索关键词字段包括
 ```html
 <li data-value="all">综合</li>
@@ -21,9 +22,13 @@ Bilibili的检索关键词字段包括
 <li data-value="upuser">UP主</li>
 <li data-value="drawyoo">画友</li>
 ```
-由此可以看出，如果检索字段包括多个，如综合，视频等，可以检索不同的字段
+由此可以看出，如果检索字段包括多个部分，如综合，视频等，可以检索不同的字段
 因此除了综合检索外，为了检索的完全性，我还使用了专题和话题集合的方式进行抓取。
+例如
+
 http://www.bilibili.com/sp/%E9%BB%84%E5%A9%B7%E5%A9%B7
+
+其包含了视频中包含TAG的
 
 ### 视频数据
 
@@ -41,6 +46,7 @@ scrapy爬虫从数据库中读取需要抓取的url，并且将这个url放到st
 
 ```SQL
 create table query_table(
+    aid int primary key,
     query_word char(100) not null, 
     page_num int,
     video_url varchar(1000),
@@ -49,17 +55,37 @@ create table query_table(
 ) charset=utf8;
 
 create table need_crawl_url(
-    aid char(10),
+    aid int primary key,
     url varchar(1000),
     create_time int,
     finished_time int default 0
 )charset=utf8;
 
-create table video_data(
-    
-)charset=utf8;
 ```
 ## 数据分析
+首先需要对于xml文件进行一定程度的解读
+```
+<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.bilibili.com</chatserver><chatid>9728464</chatid><mission>0</mission><maxlimit>1000</maxlimit><source>e-r</source><ds>2367399877</ds><de>2367399877</de><max_count>1000</max_count><d p="241.298,5,25,16707842,1472831971,0,5d2ce950,2367399877">啊黄的泪颜我来承包</d>
+</i>
+```
+在上述的例子中。
+<d>标签确定了一个弹幕信息，text部分显然是数据
+第一个应该是出现的时间，第二个应该是位置信息5顶部，
+第一项是弹幕所在时间，单位为秒。
+
+第二项是弹幕类型，其中 1~3 为滚动弹幕，4 为底端弹幕，5 为顶端弹幕，6 为逆向弹幕，7 为精确弹幕，8 为高级弹幕。
+
+第三项是弹幕字体大小，其中 25 为中，18 为小。
+
+第四项是弹幕颜色，格式是十进制的 RGB 颜色。
+
+第五项是弹幕的发送时间，使用的是 Unix 时间戳。
+
+第六项是弹幕池，其中 0 为普通弹幕，1 为字幕弹幕，2 为特殊弹幕。
+
+第七项是发送者的 ID 的 CRC32b 加密，可以用来屏蔽发送者。详细参考
+
+第八项是弹幕在数据库的 ID ，可能是用于历史弹幕。
 
 ### 统计信息
 
