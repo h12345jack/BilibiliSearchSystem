@@ -24,7 +24,6 @@ def create_video_info_table(engine):
 
 class Videos(Base):
     __tablename__ = 'video_info'
-    mysql_engine = 'MyISAM'
     k_id         = Column(String(20),primary_key=True)
     url          = Column(String(250), unique=True)
     crawl_time   = Column(Integer)
@@ -40,7 +39,14 @@ class Videos(Base):
     info         = Column(String(2000))
     upinfo       = Column(String(2000))
     video_info   = Column(String(2000))
-    tag_list    = Column(String(2000))
-    stats       = Column(Text)
+    tag_list     = Column(String(2000))
+    stats        = Column(Text)
+    
+    view         = Column(Integer)
+    danmaku      = Column(Integer)
+    reply        = Column(Integer)
+    favorite     = Column(Integer)
+    coin         = Column(Integer)
+    share        = Column(Integer)
     
     

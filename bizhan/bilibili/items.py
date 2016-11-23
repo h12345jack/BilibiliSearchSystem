@@ -29,4 +29,11 @@ class BilibiliItem(scrapy.Item):
     video_info  = Field()
     tag_list    = Field()
     stats       = Field()
+    
+    view         = Field()
+    danmaku      = Field()
+    reply        = Field()
+    favorite     = Field()
+    coin         = Field()
+    share        = Field()
 

@@ -101,14 +101,22 @@ class BilispiderSpider(scrapy.Spider):
         if len(m) == 1:
             item["cid"] = m[0][0]
             item["aid"] = m[0][1]
-            item["stats"] = self.extract_stats(sel, item["aid"])
-
+            item["stats"] = self.extract_stats(sel, item["aid"], item)
+            json_data = json.loads(item["stats"])
+            if "data" in json_data:
+                json_data2 = json_data["data"]
+                item["view"] = json_data2["view"]
+                item["danmaku"] = json_data2["danmaku"]
+                item["reply"] = json_data2["reply"]
+                item["favorite"] = json_data2["favorite"]
+                item["coin"] = json_data2["coin"]
+                item["share"] = json_data2["share"]
         return item
 
     def remove_space(self, raw_data):
         data = raw_data.replace("\t", '')
         data = data.replace("\n", '')
-        data = data.replace("  ","")
+        data = data.replace("  ", "")
         return data
 
     def extract_info(self, sel):
@@ -150,8 +158,8 @@ class BilispiderSpider(scrapy.Spider):
         tag_list_xpath = '//div[@class="v_info"]'
         data = ''.join(sel.xpath(tag_list_xpath).extract())
         return self.remove_space(data)
-        
-    def extract_stats(self, sel, aid):
+
+    def extract_stats(self, sel, aid, item):
         settings = get_project_settings()
         url = ("http://api.bilibili.com/archive_stat/stat"
                "?&aid={}&type=jsonp").format(aid)

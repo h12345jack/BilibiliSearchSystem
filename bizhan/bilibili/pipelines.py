@@ -136,6 +136,7 @@ class MySQLWriterPipeline(object):
     def process_item(self, item, spider):
         m = re.findall(r"[0-9]+",item["url"])
         item['k_id'] = '_'.join(m)
+        
         instance = Videos(**item)
 
         session = self.Session()
