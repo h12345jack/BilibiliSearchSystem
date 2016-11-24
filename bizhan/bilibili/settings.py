@@ -11,6 +11,7 @@
 
 
 import logging
+logging.getLogger('requests').setLevel(logging.CRITICAL)
 
 BOT_NAME = 'bilibili'
 
@@ -84,7 +85,7 @@ MYSQL_CONFIG = {
     'DBNAME'   : 'XFS_DB',
 }
 
-LOG_FILE = 'log.txt'
+LOG_FILE = 'scrapy.log'
 
 LOG_LEVEL = logging.INFO
 

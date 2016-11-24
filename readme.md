@@ -53,6 +53,7 @@ scrapy爬虫从数据库中读取需要抓取的url，并且将这个url放到st
 ### 爬虫框架
 本次爬虫的部分的框架Scrapy图为
 ![](http://ww2.sinaimg.cn/large/006C73MUjw1fa2642jsg5j30jg0dq40c.jpg)
+
 而在我的具体的实现的过程中。
 
 ### url列表的获取办法：
