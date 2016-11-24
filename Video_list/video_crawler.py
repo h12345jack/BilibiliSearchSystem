@@ -173,8 +173,8 @@ def extract_url_from_sp():
                 if href.find("http://www.bilibili.com") == -1:
                     href = "http://www.bilibili.com" + href
                 aid = "".join(re.findall(r'av([0-9]*)',href))
-                sql = ('INSERT INTO need_crawl_url(aid,url,create_time)'
-                      'VALUES("{}","{}","{}")ON DUPLICATE KEY UPDATE create_time={};')\
+                sql = ('INSERT IGNORE INTO need_crawl_url(aid,url,create_time)'
+                      'VALUES("{}","{}","{}");')\
                       .format(aid,href,int(time.time()),int(time.time()))
                 print>>sp_f,sql
     print>>sp_f,"INSERT IGNORE INTO need_crawl_url(aid,url,create_time) SELECT aid,video_url,crawler_time FROM query_table;"   
@@ -208,4 +208,4 @@ def main():
     extract_url_from_sp()
 
 if __name__ == '__main__':
-    extract_url_from_sp()
+    download_img()

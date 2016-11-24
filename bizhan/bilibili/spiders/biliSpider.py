@@ -47,7 +47,8 @@ class BilispiderSpider(scrapy.Spider):
         self.connection.close()
 
     def __init_start_urls(self):
-        sql = "select url from need_crawl_url where finished_time = 0"
+        now = int(time.time())
+        sql = "select url from need_crawl_url where {}-finished_time > 60*60*24*30".format(now)
         self.cursor.execute(sql)
         results = self.cursor.fetchall()
         if len(results) > 0:
