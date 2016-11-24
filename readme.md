@@ -36,10 +36,12 @@ http://www.bilibili.com/sp/%E9%BB%84%E5%A9%B7%E5%A9%B7
 INSERT IGNORE INTO need_crawl_url(aid,url,create_time) SELECT aid,video_url,crawler_time FROM query_table;
 ```
 然后```python run_spider.py```便能够实现第一轮抓取，进一步的将人工筛选的query_tag进行query进一步得到query_table的数据，然后再将query_table放到need_crawl_url的表中，再启动爬虫，从need_crawl_url中抓取。可以循环进行，但是在本次项目中，最后的部分，应该包括如下：
+
 1. sp:黄婷婷
 2. query_word: 黄婷婷
 3. query_word: 人工筛选其他的表达黄婷婷的单词
 4. 
+
 ### 视频数据
 事实上，开始的抓取的部分是没有视频的元数据的，而只有UCG的数据。这对于项目而言有巨大的打击。
 因此我需要包含我抓取的视频的元数据的信息，这个部分是需要进行解析地址的。
