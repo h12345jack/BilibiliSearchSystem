@@ -15,8 +15,7 @@ import lxml
 import requests
 from lxml.html import clean
 
-from const import HEADERS
-
+from const import HEADERS,HTT_QUERY
 
 QUERY_HTML = 'query_keyword'
 QUERY_SP = "query_sp"
@@ -197,7 +196,7 @@ def download_img():
                     img_f.write(requests.get(i).content)
                 print img_fname, ' download!'
 
-def main():
+def step1():
     keyword = [u"黄婷婷"]
     for k in keyword:
         crawler_keyword(k)
@@ -207,5 +206,20 @@ def main():
         crawler_special(u"黄婷婷")
     extract_url_from_sp()
 
+def step2():
+    keyword = [u"SNH48",u"李艺彤"]
+    for k in keyword:
+        crawler_keyword(k)
+    
+    sp_list = [u"SNH48",u"李艺彤"]
+    for sp in keyword:
+        crawler_special(sp)
+    extract_url_from_sp()
+
+
+def main():
+    for k in HTT_QUERY:
+        crawler_keyword(k)
+
 if __name__ == '__main__':
-    download_img()
+    step2()

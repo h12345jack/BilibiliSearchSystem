@@ -54,6 +54,7 @@ class BilispiderSpider(scrapy.Spider):
         if len(results) > 0:
             for i in results:
                 self.start_urls.append(i[0])
+        
 
     def __init__(self, *args, **kwargs):
         self.__init_mysql_connection()
@@ -97,7 +98,7 @@ class BilispiderSpider(scrapy.Spider):
         item["video_info"] = self.extract_video_info(sel)
         item["tag_list"] = self.extract_tag_list(sel)
         # cid aid
-        m = re.findall(r"cid=([0-9]+?)\&aid=([0-9]+?)\&", response.body)
+        m = re.findall(r"cid=([0-9]+)\&aid=([0-9]+)", response.body)
         print m
         if len(m) == 1:
             item["cid"] = m[0][0]
@@ -112,6 +113,9 @@ class BilispiderSpider(scrapy.Spider):
                 item["favorite"] = json_data2["favorite"]
                 item["coin"] = json_data2["coin"]
                 item["share"] = json_data2["share"]
+        else:
+            print response.url,"cid wrong"
+
         return item
 
     def remove_space(self, raw_data):
