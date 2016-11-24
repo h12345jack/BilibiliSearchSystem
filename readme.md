@@ -122,7 +122,6 @@ create table need_crawl_url(
 
 有上面的解析，可以看出，讨论分析的部分包括：弹幕随着视频出现的时间的分布情况，弹幕类型的占比情况，颜色，发送的时间相比视频的上传时间等分析。
 
-
 ### 统计信息
 有多少个视频
 这些视频的子视频切分情况
@@ -143,6 +142,42 @@ create table need_crawl_url(
 ### 机器学习
 
 ## 检索系统
+检索使用的工具是[Whoosh](https://pypi.python.org/pypi/Whoosh/)
+该检索工具包含了全文检索，可以定义需要检索的字段，其可包括的类型如下：
+
+*   whoosh.fields.TEXT
+*   whoosh.fields.KEYWORD
+*   whoosh.fields.ID
+*   whoosh.fields.STORED
+*   whoosh.fields.NUMERIC
+*   whoosh.fields.DATETIME
+*   whoosh.fields.BOOLEAN
+*   whoosh.fields.NGRAM
+
+而在本项目中，可以检索包括评论信息和弹幕信息，在项目展示时，展示弹幕检索。
+弹幕检索可以包含多个字段，字段可以包括：出现时间、弹幕类型、弹幕字体、弹幕颜色、弹幕发送时间、弹幕池等，而在本项目展示时，只设计了出现时间、弹幕类型和弹幕内容的字段，其他的字段也有重要的作用，但是由于机器资源的问题，还是将所有的内容视为一个视频的文本进行检索。也展示不涉及时间。
+
+检索包括：弹幕检索、评论信息（暂无）
+
+whoosh的排序方法包括：
+
+1.    BM25F（B=0.75, K1=1.2）
+2.    TF_IDF
+3.    Frequency
+
+默认使用BM25F方法，BM25算法，通常用来作搜索相关性评分。一句话概况其主要思想：对Query进行语素解析，生成语素q_i；然后，对于每个搜索结果D，计算每个语素q_i与D的相关性得分，最后，将q_i相对于D的相关性得分进行加权求和，从而得到Query与D的相关性得分。
+BM25算法的一般性公式如下：
+
+![](http://luokr.com/upload/2013/12/31/468a/46e5dffc4447fe0555adbd243d0ed98a.gif)
+
+其中，Q表示Query，q_i表示Q解析之后的一个语素（对中文而言，我们可以把对Query的分词作为语素分析，每个词看成语素q_i。）；d表示一个搜索结果文档；Wi表示语素q_i的权重；R(q_i，d)表示语素q_i与文档d的相关性得分。
+BM25算法的相关性得分公式可总结为：
+
+![](http://luokr.com/upload/2013/12/31/3196/31e78a56c620e2ca1d2e6a8a956c3296.gif)
+
+K的定义中可以看到，参数b的作用是调整文档长度对相关性影响的大小。b越大，文档长度的对相关性得分的影响越大，反之越小。而文档的相对长度越长，K值将越大，则相关性得分会越小。现有的实验数据表明，k1的取值为1.2~2，B的取值为0.75有好的效果。
+
+在本系统中，对于检索暂时使用原始的数据。
 
 ## 网站建设
 
@@ -151,10 +186,7 @@ create table need_crawl_url(
 ### 可视化部分
 
 ### 检索页面 
-检索使用的工具是[Whoosh](https://pypi.python.org/pypi/Whoosh/)
-该检索工具包含了全文检索，
-检索包括：评论信息、弹幕检索
-返回检索结果。
+
 
 ### 其他
 之前一直遇到“OperationalError (2006, 'MySQL server has gone away')”的错误，改了很多方法，包括
