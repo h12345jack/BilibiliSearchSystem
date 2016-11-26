@@ -5,11 +5,14 @@ import os
 import codecs
 
 import jieba
+from jieba.analyse import ChineseAnalyzer
+from lxml import etree
 from whoosh import index
 from whoosh.fields import Schema, TEXT, ID, NUMERIC
 from whoosh.index import create_in, open_dir
-from lxml import etree
 from whoosh.qparser import QueryParser
+from whoosh import scoring
+
 
 XML_DIR = '../bizhan/xml_dir'
 INDEX_DIR = 'index_dir'
@@ -90,7 +93,10 @@ def index():
     '''
     
     f_list = os.listdir(XML_DIR)
-    schema = Schema(path=ID(stored=True), content=TEXT(stored=True))
+    schema = Schema(path =ID(stored=True),\
+                    content=TEXT(stored=True,analyzer = ChineseAnalyzer()),\
+                    radio= NUMERIC(float,stored=True)
+                    )
 
     if not os.path.exists(INDEX_DIR):
         os.mkdir(INDEX_DIR)
@@ -108,17 +114,24 @@ def index():
                 node = etree.XML(content.encode('utf8'))
                 danmu_xpath = "//d/text()"
                 text_list = []
+                max_limit_xpath = "//maxlimit/text()"
+                max_limit = node.xpath(max_limit_xpath)
+                assert len(max_limit) == 1,'max_limit is wrong '+ fname
+                max_limit = max_limit[0]
                 for danmu in node.xpath(danmu_xpath):
-                    word_list = jieba.cut(danmu.strip())
-                    sentence = " ".join([w for w in word_list if w not in filter_words and len(w.strip())>0])
+                    sentence = danmu.strip()
                     if len(sentence) > 0:
-                        text_list.append(sentence)
+                        text_list.append(sentence)        
                 if len(text_list)>0:
-                    text_value = ' \n '.join(text_list)
+                    text_value = u' \n '.join(text_list)
+                    radio = len(text_list)*1.0/int(max_limit)
                     writer.add_document(path=fname.decode('utf8'),
-                                    content=text_value)
-            except Exception, e:
+                                        content=text_value,
+                                        radio = radio
+                                        )
+            except etree.XMLSyntaxError, e:
                 print filename
+            except Exception,e:
                 print e
     writer.commit()
 
@@ -129,19 +142,21 @@ def query(query_phrase):
 
     filter_words = load_all_words()
     word_list = jieba.cut(query_phrase)
-    query_phrase = " ".join([w for w in word_list if w not in filter_words and len(w.strip())>0])
+    query_phrase = " ".join([w for w in word_list \
+        if w not in filter_words and len(w.strip())>0])
     query_phrase = query_phrase.replace("  "," ")
     
     print type(query_phrase),query_phrase
 
     ix = open_dir(INDEX_DIR)
-    
-    with ix.searcher() as searcher:
+
+    with ix.searcher(weighting=scoring.BM25F(B=0.1)) as searcher:
 
         query = QueryParser("content", ix.schema).parse(query_phrase)
         results = searcher.search(query, limit=50)
         print results
         for e in results[:5]:
+            print e.score,e["radio"]
             print e.highlights("content").encode('utf8')
             print "from", e["path"]
             print '*'*20
@@ -149,4 +164,4 @@ def query(query_phrase):
 
 if __name__ == '__main__':
     # index()
-    query(u"撸")
+    query(u"撸力 黄婷婷 发卡")

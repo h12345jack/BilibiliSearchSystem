@@ -7,14 +7,14 @@ import logging
 import os
 import random
 import codecs
-
+import HTMLParser
 
 import MySQLdb
 import lxml.html as ET
 import lxml
 import requests
 from lxml.html import clean
-
+from lxml import etree
 from const import HEADERS,HTT_QUERY
 
 QUERY_HTML = 'query_keyword'
@@ -196,6 +196,18 @@ def download_img():
                     img_f.write(requests.get(i).content)
                 print img_fname, ' download!'
 
+def downnload_sp_xml():
+    xml_url = "http://www.bilibili.com/sitemap/sp.xml"
+    with open("sp.xml",'w') as f:
+        content = requests.get(xml_url).content
+        f.write(content)
+        root = etree.XML(content)
+        html_parser = HTMLParser.HTMLParser()
+        namespace = {'g':"http://www.google.com/schemas/sitemap/0.84"}
+        import urllib
+        for i in root.xpath("//g:loc/text()",namespaces=namespace):
+            print urllib.unquote(i)
+
 def step1():
     keyword = [u"黄婷婷"]
     for k in keyword:
@@ -222,4 +234,4 @@ def main():
         crawler_keyword(k)
 
 if __name__ == '__main__':
-    step2()
+    downnload_sp_xml()
