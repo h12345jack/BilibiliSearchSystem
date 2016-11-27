@@ -5,14 +5,14 @@ import os
 import codecs
 
 import jieba
-from jieba.analyse import ChineseAnalyzer
+from jieba.analyse.analyzer import ChineseAnalyzer
+
 from lxml import etree
 from whoosh import index
 from whoosh.fields import Schema, TEXT, ID, NUMERIC
 from whoosh.index import create_in, open_dir
 from whoosh.qparser import QueryParser
 from whoosh import scoring
-
 
 XML_DIR = '../bizhan/xml_dir'
 INDEX_DIR = 'index_dir'
@@ -94,17 +94,26 @@ def index():
     
     f_list = os.listdir(XML_DIR)
     schema = Schema(path =ID(stored=True),\
-                    content=TEXT(stored=True,analyzer = ChineseAnalyzer()),\
+                    content=TEXT(analyzer = ChineseAnalyzer()),\
                     radio= NUMERIC(float,stored=True)
                     )
-
+    new_or_not = 0
     if not os.path.exists(INDEX_DIR):
         os.mkdir(INDEX_DIR)
+        new_or_not = 1
+
+    # if new_or_not:
+    #     ix = create_in(INDEX_DIR, schema)
+    # else:
+    #     ix = open_dir(INDEX_DIR)
 
     ix = create_in(INDEX_DIR, schema)
+
     writer = ix.writer()
 
     filter_words = load_all_words()
+
+    num = 0
 
     for fname in f_list:
         filename = os.path.join(XML_DIR, fname)
@@ -129,10 +138,12 @@ def index():
                                         content=text_value,
                                         radio = radio
                                         )
+                num = num + 1
             except etree.XMLSyntaxError, e:
-                print filename
+                print filename,e
             except Exception,e:
                 print e
+    print num,'danmu indexed!'
     writer.commit()
 
 
@@ -154,14 +165,21 @@ def query(query_phrase):
 
         query = QueryParser("content", ix.schema).parse(query_phrase)
         results = searcher.search(query, limit=50)
-        print results
-        for e in results[:5]:
-            print e.score,e["radio"]
-            print e.highlights("content").encode('utf8')
-            print "from", e["path"]
-            print '*'*20
-    ix.close()
+        re_json = []
+        for e in results[:25]:
+            value = float(e.score)*float(e["radio"])
+            # print e.score,e["radio"]
+            # print e.highlights("content").encode('utf8')
+            # print "from", e["path"]
+            re_json.append((value,e["path"]))
+            # print '*'*20
+        ix.close()
+        rs = sorted(re_json,key=lambda x:x[0],reverse=True)
+        for i in rs:
+            print i
+
+        return re_json[:20]
 
 if __name__ == '__main__':
     # index()
-    query(u"撸力 黄婷婷 发卡")
+    query(u"黄宇直")

@@ -8,6 +8,7 @@ import os
 import random
 import codecs
 import HTMLParser
+import hashlib
 
 import MySQLdb
 import lxml.html as ET
@@ -15,7 +16,8 @@ import lxml
 import requests
 from lxml.html import clean
 from lxml import etree
-from const import HEADERS,HTT_QUERY
+from const import HEADERS,HTT_QUERY,XML_DIR,METADATA_DIR,COMMNETS_DIR,APPKEY,SECRETKEY_MINILOADER
+
 
 QUERY_HTML = 'query_keyword'
 QUERY_SP = "query_sp"
@@ -208,6 +210,34 @@ def downnload_sp_xml():
         for i in root.xpath("//g:loc/text()",namespaces=namespace):
             print urllib.unquote(i)
 
+
+def xml_downloader(cid):
+    url = "http://comment.bilibili.com/{}.xml".format(cid)
+    filename = cid + '.xml'
+    xml_dir = XML_DIR
+
+    if not os.path.exists(xml_dir):
+        os.mkdir(xml_dir)
+
+    fpath = os.path.join(xml_dir, filename)
+    with open(fpath, 'w') as f:
+        f.write(requests.get(url).content)
+    print fpath
+
+    metadata_dir = METADATA_DIR
+
+    if not os.path.exists(metadata_dir):
+        os.mkdir(metadata_dir)
+
+    appkey = APPKEY
+    sign_this = hashlib.md5('cid={cid}&player=1{SECRETKEY_MINILOADER}'.format(cid = cid, SECRETKEY_MINILOADER = SECRETKEY_MINILOADER)).hexdigest()
+    url = 'http://interface.bilibili.com/playurl?&cid=' + cid + '&player=1' + '&sign=' + sign_this
+    
+    fpath = os.path.join(metadata_dir,filename)
+    with open(fpath,'w') as f:
+        f.write(requests.get(url).content)
+    print fpath
+
 def step1():
     keyword = [u"黄婷婷"]
     for k in keyword:
@@ -234,4 +264,5 @@ def main():
         crawler_keyword(k)
 
 if __name__ == '__main__':
-    downnload_sp_xml()
+    pass
+

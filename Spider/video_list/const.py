@@ -98,3 +98,13 @@ u"黄鹤",
 u"鹿黄",
 u"黄婷婷的性格魅力",
 ]
+
+XML_DIR = '../bizhan/xml_dir'
+
+METADATA_DIR = '../bizhan/metadata_dir'
+
+COMMNETS_DIR = '../bizhan/comments_dir'
+
+APPKEY = 'f3bb208b3d081dc8'
+
+SECRETKEY_MINILOADER = '1c15888dc316e05a15fdd0a02ed6584f'

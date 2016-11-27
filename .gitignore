@@ -10,4 +10,5 @@
 *.gif
 *.sql
 Search_system/index_dir
+Analysis/*.txt
 env

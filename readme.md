@@ -130,19 +130,32 @@ create table need_crawl_url(
 有上面的解析，可以看出，讨论分析的部分包括：弹幕随着视频出现的时间的分布情况，弹幕类型的占比情况，颜色，发送的时间相比视频的上传时间等分析。
 
 ### 统计信息
+select aid,count(*),startDate,author,view,danmaku,reply,favorite,coin,share from video_info group by aid into outfile "f:\\data.txt" FIELDS TERMINATED BY ',';
+
 有多少个视频，视频的时间的长度
+
+
 这些视频的子视频划分情况
-这些视频的UP主的信息是怎么样的
+
+这些视频的UP主的信息是怎么样的？
+大部分的UP主都是少量UP视频，大概
+
+
 这些视频的view,danmaku,reply,favorite,coin,share的情况是怎么样的分布
+长尾分布，这个和互联网本身的特点非常相关，互联网中的
+是否有相关性，例如是否存在
+
+up时间多半为2016年，2015年左右开始出现的增长的趋势
 
 弹幕的分布情况，类型，颜色
 
 弹幕的文本分析，朴素贝叶斯分类器
-弹幕文本情感识别 (需要相关预料信息)
+
+弹幕文本情感识别 (需要相关语料信息)
 
 
 ### 可视化
-首先可视化一个snh48总选的html页面？
+首先可视化一个snh48总选的html页面，总选
 然后选择一个人
 
 

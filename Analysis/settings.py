@@ -11,3 +11,7 @@ MYSQL_CONFIG = {
 LOG_FILE = 'scrapy.log'
 
 LOG_LEVEL = logging.INFO
+
+XML_DIR = '../Spider/xml_dir'
+
+METADATA_DIR = '../Spider/metadata_dir'
