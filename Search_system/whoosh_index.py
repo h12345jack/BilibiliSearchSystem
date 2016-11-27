@@ -180,6 +180,9 @@ def query(query_phrase):
 
         return re_json[:20]
 
+
+
 if __name__ == '__main__':
-    # index()
+
     query(u"黄宇直")
+
