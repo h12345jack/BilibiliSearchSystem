@@ -162,6 +162,9 @@ def query(query_phrase):
             print '*'*20
     ix.close()
 
+
+
 if __name__ == '__main__':
     # index()
-    query(u"撸力 黄婷婷 发卡")
+    pass
+    # query(u"撸力 黄婷婷 发卡")
