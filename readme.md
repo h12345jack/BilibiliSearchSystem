@@ -130,35 +130,37 @@ create table need_crawl_url(
 有上面的解析，可以看出，讨论分析的部分包括：弹幕随着视频出现的时间的分布情况，弹幕类型的占比情况，颜色，发送的时间相比视频的上传时间等分析。
 
 ### 统计信息
+```
 select aid,count(*),startDate,author,view,danmaku,reply,favorite,coin,share from video_info group by aid into outfile "f:\\data.txt" FIELDS TERMINATED BY ',';
+```
+使用sql语句到处必要的数据统计文件，进行SPSS和python数据分析包pandas的分析。大体上回答了一下的问题：
 
-有多少个视频，视频的时间的长度
 
+有多少个视频，视频的时间的长度？
 
-这些视频的子视频划分情况
+这些视频的子视频划分情况？
 
 这些视频的UP主的信息是怎么样的？
-大部分的UP主都是少量UP视频，大概
+大部分的UP主都是少量UP视频，明星up主列表如下（黄色是我关注的=_=）：
 
+![](http://ww1.sinaimg.cn/thumbnail/006C73MUjw1fa7ym805b9j30hg0o2jzo.jpg)
 
-这些视频的view,danmaku,reply,favorite,coin,share的情况是怎么样的分布
-长尾分布，这个和互联网本身的特点非常相关，互联网中的
-是否有相关性，例如是否存在
+这些视频的view,danmaku,reply,favorite,coin,share的情况是怎么样的分布?是否有相关性?
+长尾分布，这个和互联网本身的特点非常相关.
 
-up时间多半为2016年，2015年左右开始出现的增长的趋势
+up时间?
 
 弹幕的分布情况，类型，颜色
 
-弹幕的文本分析，朴素贝叶斯分类器
+其他的扩展：
 
+弹幕的文本分析，朴素贝叶斯分类器
 弹幕文本情感识别 (需要相关语料信息)
+暂时未完成。
+
 
 
 ### 可视化
-首先可视化一个snh48总选的html页面，总选
-然后选择一个人
-
-
 ### 机器学习
 
 
@@ -211,6 +213,19 @@ K的定义中可以看到，参数b的作用是调整文档长度对相关性影
 计划使用Flask进行网站建设
 
 ### 可视化部分
+
+由于DDL的问题，只能先出Version,事实上，我的可视化分为两个部分，一个是基于我的主题SNH48的特点，包括总选的数据、(官网的妹子的数据)[http://www.snh48.com/member_detail.php?sid=10025]、妹子的外部数据库（贴吧，微博等统计数据），想好的可视化包括总选票数，名次的变化等。
+但是限于时间，不做这个部分。
+
+
+第二个部分就是对于一个特点的视频，得到其视频的弹幕分布图，和弹幕详细的统计图。最开始的设计是
+
+![](http://ww3.sinaimg.cn/large/006C73MUjw1fa7yg19l84j30nq0a4myy.jpg)
+
+但是显然这样的结果不够令人满意，我需要实现一个交互的系统，更好的HCI，否则我觉得自己PKU白上那么多课程了。于是，希望借鉴dc.js在[examples](https://dc-js.github.io/dc.js/#monthly-volume-chart)上的效果，实现一个动态的视频弹幕统计系统。
+
+时间是一晚上，大概是3个小时左右。
+
 
 ### 检索页面 
 

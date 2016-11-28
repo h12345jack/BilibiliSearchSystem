@@ -99,11 +99,11 @@ u"鹿黄",
 u"黄婷婷的性格魅力",
 ]
 
-XML_DIR = '../bizhan/xml_dir'
+XML_DIR = '../xml_dir'
 
-METADATA_DIR = '../bizhan/metadata_dir'
+METADATA_DIR = '../metadata_dir'
 
-COMMNETS_DIR = '../bizhan/comments_dir'
+COMMNETS_DIR = '../comments_dir'
 
 APPKEY = 'f3bb208b3d081dc8'
 
