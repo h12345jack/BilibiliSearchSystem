@@ -61,9 +61,11 @@ scrapy爬虫从数据库中读取需要抓取的url，并且将这个url放到st
 
 ### 爬虫框架
 本次爬虫的部分的框架Scrapy图为
-![](http://ww2.sinaimg.cn/large/006C73MUjw1fa2642jsg5j30jg0dq40c.jpg)
+![](http://ww2.sinaimg.cn/mw690/006C73MUjw1fa2642jsg5j30jg0dq40c.jpg)
 
 而在我的具体的实现的过程中。
+
+![](http://ww4.sinaimg.cn/mw690/006C73MUjw1fa7ys5svfhj30mr0g90ua.jpg)
 
 ### url列表的获取办法：
 1. query
@@ -143,7 +145,7 @@ select aid,count(*),startDate,author,view,danmaku,reply,favorite,coin,share from
 这些视频的UP主的信息是怎么样的？
 大部分的UP主都是少量UP视频，明星up主列表如下（黄色是我关注的=_=）：
 
-![](http://ww1.sinaimg.cn/thumbnail/006C73MUjw1fa7ym805b9j30hg0o2jzo.jpg)
+![](http://ww4.sinaimg.cn/large/006C73MUjw1fa7ym805b9j30hg0o2jzo.jpg)
 
 这些视频的view,danmaku,reply,favorite,coin,share的情况是怎么样的分布?是否有相关性?
 长尾分布，这个和互联网本身的特点非常相关.
@@ -214,7 +216,7 @@ K的定义中可以看到，参数b的作用是调整文档长度对相关性影
 
 ### 可视化部分
 
-由于DDL的问题，只能先出Version,事实上，我的可视化分为两个部分，一个是基于我的主题SNH48的特点，包括总选的数据、(官网的妹子的数据)[http://www.snh48.com/member_detail.php?sid=10025]、妹子的外部数据库（贴吧，微博等统计数据），想好的可视化包括总选票数，名次的变化等。
+由于DDL的问题，只能先出Version,事实上，我的可视化分为两个部分，一个是基于我的主题SNH48的特点，包括总选的数据、[官网的妹子的数据](http://www.snh48.com/member_detail.php?sid=10025)、妹子的外部数据库（贴吧，微博等统计数据），想好的可视化包括总选票数，名次的变化等。
 但是限于时间，不做这个部分。
 
 
@@ -225,6 +227,7 @@ K的定义中可以看到，参数b的作用是调整文档长度对相关性影
 但是显然这样的结果不够令人满意，我需要实现一个交互的系统，更好的HCI，否则我觉得自己PKU白上那么多课程了。于是，希望借鉴dc.js在[examples](https://dc-js.github.io/dc.js/#monthly-volume-chart)上的效果，实现一个动态的视频弹幕统计系统。
 
 时间是一晚上，大概是3个小时左右。
+
 
 
 ### 检索页面 

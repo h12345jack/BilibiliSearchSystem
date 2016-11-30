@@ -13,6 +13,9 @@ from whoosh.fields import Schema, TEXT, ID, NUMERIC
 from whoosh.index import create_in, open_dir
 from whoosh.qparser import QueryParser
 from whoosh import scoring
+from sqlalchemy.orm import sessionmaker
+from models import Videos,db_connect
+
 
 XML_DIR = '../bizhan/xml_dir'
 INDEX_DIR = 'index_dir'
@@ -164,7 +167,7 @@ def query(query_phrase):
     with ix.searcher(weighting=scoring.BM25F(B=0.1)) as searcher:
 
         query = QueryParser("content", ix.schema).parse(query_phrase)
-        results = searcher.search(query, limit=50)
+        results = searcher.search(query, limit=200)
         re_json = []
         for e in results[:25]:
             value = float(e.score)*float(e["radio"])
@@ -175,14 +178,31 @@ def query(query_phrase):
             # print '*'*20
         ix.close()
         rs = sorted(re_json,key=lambda x:x[0],reverse=True)
-        for i in rs:
-            print i
+        res = [] 
+        
+        engine = db_connect()
+        Session = sessionmaker(bind=engine)
+        session = Session()
 
-        return re_json[:20]
+        for i in rs:
+            data = dict()
+            cid = i[1][:i[1].rfind(".xml")]
+            print cid,
+            cid = "10893573"
+            value = session.query(Videos).filter(Videos.cid==cid).first()
+            if value:
+                data = value.__dict__
+                data["score"] = i[0]
+                res.append(data)
+        return res
+
+
+
+
 
 
 
 if __name__ == '__main__':
 
-    query(u"黄宇直")
+    print query(u"黄宇直")
 
