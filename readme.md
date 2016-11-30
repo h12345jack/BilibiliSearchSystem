@@ -246,6 +246,8 @@ K的定义中可以看到，参数b的作用是调整文档长度对相关性影
 但是显然这样的结果不够令人满意，我需要实现一个交互的系统，更好的HCI，否则我觉得自己PKU白上那么多课程了。于是，希望借鉴dc.js在[examples](https://dc-js.github.io/dc.js/#monthly-volume-chart)上的效果，实现一个动态的视频弹幕统计系统。
 
 
+![](http://ww2.sinaimg.cn/mw690/006C73MUjw1faaeedogltj31400w47f4.jpg)
+
 ### 检索页面 
 ![](http://ww2.sinaimg.cn/mw690/006C73MUjw1faae653abrj31400iz79h.jpg)
 
