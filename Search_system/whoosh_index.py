@@ -3,11 +3,15 @@
 
 import os
 import codecs
+import json
+import re
+import time
 
 import jieba
 from jieba.analyse.analyzer import ChineseAnalyzer
 
 from lxml import etree
+import lxml.html
 from whoosh import index
 from whoosh.fields import Schema, TEXT, ID, NUMERIC
 from whoosh.index import create_in, open_dir
@@ -17,7 +21,7 @@ from sqlalchemy.orm import sessionmaker
 from models import Videos,db_connect
 
 
-XML_DIR = '../bizhan/xml_dir'
+XML_DIR = '../Spider/xml_dir'
 INDEX_DIR = 'index_dir'
 DIC_DIR = 'dictionary'
 
@@ -97,7 +101,7 @@ def index():
     
     f_list = os.listdir(XML_DIR)
     schema = Schema(path =ID(stored=True),\
-                    content=TEXT(analyzer = ChineseAnalyzer()),\
+                    content=TEXT(analyzer = ChineseAnalyzer(),stored=True),\
                     radio= NUMERIC(float,stored=True)
                     )
     new_or_not = 0
@@ -119,6 +123,7 @@ def index():
     num = 0
 
     for fname in f_list:
+        if fname.find(".xml")==-1:continue
         filename = os.path.join(XML_DIR, fname)
         with codecs.open(filename, 'r', 'utf8') as f:
             content = f.read()
@@ -167,42 +172,92 @@ def query(query_phrase):
     with ix.searcher(weighting=scoring.BM25F(B=0.1)) as searcher:
 
         query = QueryParser("content", ix.schema).parse(query_phrase)
-        results = searcher.search(query, limit=200)
+        results = searcher.search(query, limit=150)
         re_json = []
-        for e in results[:25]:
-            value = float(e.score)*float(e["radio"])
+        for e in results:
+            score = float(e.score)*float(e["radio"])
             # print e.score,e["radio"]
-            # print e.highlights("content").encode('utf8')
-            # print "from", e["path"]
-            re_json.append((value,e["path"]))
+            m = e.highlights("content").encode('utf8')
+            re_json.append((score,e["path"],m))
             # print '*'*20
         ix.close()
+        print len(re_json)
         rs = sorted(re_json,key=lambda x:x[0],reverse=True)
-        res = [] 
-        
-        engine = db_connect()
-        Session = sessionmaker(bind=engine)
-        session = Session()
-
-        for i in rs:
-            data = dict()
-            cid = i[1][:i[1].rfind(".xml")]
-            print cid,
-            cid = "10893573"
-            value = session.query(Videos).filter(Videos.cid==cid).first()
-            if value:
-                data = value.__dict__
-                data["score"] = i[0]
-                res.append(data)
+        res = query_output(rs)
         return res
 
 
+def query_output(rs):
+    res = [] 
+    engine = db_connect()
+    Session = sessionmaker(bind=engine)
+    session = Session()
+
+    for i in rs:
+        data = dict()
+        cid = i[1][:i[1].rfind(".xml")]
+        print cid,
+        value = session.query(Videos).filter(Videos.cid==cid).first()
+        if value:
+            data = value.as_dict()
+            data["danmu"] = extract_danmu_example(i[2])
+            data["score"] = i[0]
+            T_index = data["startDate"].find('T')
+            data["date"] = data["startDate"][:T_index]
+            data["hour"] = data["startDate"][T_index+1:]
+            data["tag_list"] = extract_tag(data["tag_list"])
+            data["u_face"] = extract_u_face(data["upinfo"])
+            data["r_info"] = extract_r_info(data["upinfo"])
+            res.append(data)
+    print
+    print res[0]["cid"]
+    print len(res),"results find!"
+    return res
+
+def mysql_result_by_cid(cid):
+    engine = db_connect()
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    data = dict()
+    value = session.query(Videos).filter(Videos.cid==cid).first()
+    if value:
+        data = value.as_dict()
+        data["danmu"] = extract_danmu_example(cid)
+        T_index = data["startDate"].find('T')
+        data["date"] = data["startDate"][:T_index]
+        data["hour"] = data["startDate"][T_index+1:]
+        data["tag_list"] = extract_tag(data["tag_list"])
+        data["u_face"] = extract_u_face(data["upinfo"])
+        data["r_info"] = extract_r_info(data["upinfo"])
+        data["crawl_time"] = time.asctime(time.localtime(int(data["crawl_time"])))
+        data["page"] = data["k_id"][data["k_id"].find("_"   )+1:]
+        return data
+    return []
 
 
+def extract_danmu_example(danmu):
+    rs = [[],[],[]]
+    danmu_list = danmu.split('\n')
+    for i,ele in enumerate(danmu_list[:50]):
+        rs[i%3].append(ele.decode("utf8"))
+    return rs
 
+def extract_tag(tag_html):
+    root = lxml.html.fromstring(tag_html)
+    tag_xpath = "//li/a"
+    rs = []
+    for i in root.xpath(tag_xpath):
+        rs.append(lxml.html.tostring(i,encoding="utf8").decode("utf8"))
+    return rs
 
+def extract_u_face(upinfo):
+    m = re.findall(r"\<div\s?class=\"u\-face\"\>(.*?)\<\/div\>",upinfo)
+    return ''.join(m)
+
+def extract_r_info(upinfo):
+    m = re.findall(r"\<div\s?class=\"r\-info\"\>(.*)\<\/div\><\/div\>",upinfo)
+    return ''.join(m)
 
 if __name__ == '__main__':
-
-    print query(u"黄宇直")
+    query(u"黄宇直")
 

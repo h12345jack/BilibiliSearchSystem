@@ -10,11 +10,10 @@ import codecs
 import MySQLdb
 import lxml.html 
 from lxml import etree
+from const import XML_DIR,METADATA_DIR
 
 
-XML_DIR = '../Spider/xml_dir'
 
-METADATA_DIR = '../Spider/metadata_dir'
 
 def video_len_query(fname):
     filename = os.path.join(METADATA_DIR, fname)

@@ -4,7 +4,7 @@
 from sqlalchemy import create_engine, Column, String, DateTime, Integer, Text, Date
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.engine.url import URL
-from cons import MYSQL_CONFIG
+from const import MYSQL_CONFIG
 
 Base = declarative_base()
 
@@ -45,5 +45,9 @@ class Videos(Base):
     favorite     = Column(Integer)
     coin         = Column(Integer)
     share        = Column(Integer)
+
+    def as_dict(self):
+       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
     
     

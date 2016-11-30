@@ -12,3 +12,6 @@
 Search_system/index_dir
 Analysis/*.txt
 env
+!Search_system/templates
+!Search_system/static
+!Search_system/dictionary
