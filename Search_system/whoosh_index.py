@@ -180,10 +180,11 @@ def query(query_phrase):
             m = e.highlights("content").encode('utf8')
             re_json.append((score,e["path"],m))
             # print '*'*20
-        ix.close()
         print len(re_json)
         rs = sorted(re_json,key=lambda x:x[0],reverse=True)
         res = query_output(rs)
+        ix.close()
+        
         return res
 
 

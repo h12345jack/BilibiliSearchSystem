@@ -90,7 +90,7 @@
         <div class="row col-md-10  col-md-offset-1" id="search-rs">
             <hgroup class="mb20">
                 <h1>检索结果</h1>
-                <h2 class="lead"><strong class="text-danger">3</strong> results were found for the search for <strong class="text-danger">{{ query_word }}</strong></h2>
+                <h2 class="lead"><strong class="text-danger">{{number}}</strong> results were found for the search for <strong class="text-danger">{{ query_word }}</strong></h2>
             </hgroup>
             {% for result in results %}
             <article class="search-result row">

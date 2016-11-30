@@ -53,14 +53,18 @@ http://www.bilibili.com/sitemap/sp.xml
 事实上，开始的抓取的部分是没有视频的元数据的，而只有UCG的数据。这对于项目而言有巨大的打击。
 因此我需要包含我抓取的视频的元数据的信息，这个部分是需要进行解析地址的。
 而我参看了[哔哩哔哩真实视频地址解析-初探](#citation)和[you-get](#citation)的bilibili部分，使用了其包含的APPKEY和编码方法。
-大体上获取了元数据的信息。timelength是该元素最重要的信息，是以0.001s为单位的时间信息。
+大体上获取了元数据的信息,*由于视频太多太大，遂放弃了把视频保存下来的想法，内存还是要钱的=_=*。timelength是该元素最重要的信息，是以0.001s为单位的时间信息。
+
+![](http://ww4.sinaimg.cn/large/006C73MUjw1faadq2as2pj30ry0e6dmp.jpg)
 
 ### 爬虫思路
 写一个获取要抓取的url列表，放在数据库中。
 scrapy爬虫从数据库中读取需要抓取的url，并且将这个url放到start_urls列表中，开始抓取。
+定期轮训数据库，然后得到需要抓取的url，保持抓取。
 
 ### 爬虫框架
-本次爬虫的部分的框架Scrapy图为
+本次爬虫的部分的框架Scrapy图为：
+
 ![](http://ww2.sinaimg.cn/mw690/006C73MUjw1fa2642jsg5j30jg0dq40c.jpg)
 
 而在我的具体的实现的过程中。
@@ -135,8 +139,7 @@ create table need_crawl_url(
 ```
 select aid,count(*),startDate,author,view,danmaku,reply,favorite,coin,share from video_info group by aid into outfile "f:\\data.txt" FIELDS TERMINATED BY ',';
 ```
-使用sql语句到处必要的数据统计文件，进行SPSS和python数据分析包pandas的分析。大体上回答了一下的问题：
-
+使用sql语句导出必要的数据统计文件，进行SPSS和python数据分析包pandas的分析。大体上回答了以下的问题：
 
 有多少个视频，视频的时间的长度？
 
@@ -148,6 +151,7 @@ select aid,count(*),startDate,author,view,danmaku,reply,favorite,coin,share from
 ![](http://ww4.sinaimg.cn/large/006C73MUjw1fa7ym805b9j30hg0o2jzo.jpg)
 
 这些视频的view,danmaku,reply,favorite,coin,share的情况是怎么样的分布?是否有相关性?
+
 长尾分布，这个和互联网本身的特点非常相关.
 
 up时间?
@@ -160,11 +164,26 @@ up时间?
 弹幕文本情感识别 (需要相关语料信息)
 暂时未完成。
 
-
-
 ### 可视化
+
+可视化系统除了必要的数据的展示外，重要的是数据的过滤，这个过程是非常重要的。
+
+```
+The main goal of data visualization is its ability to visualize data, communicating information clearly and effectivelty. It doesn’t mean that data visualization needs to look boring to be functional or extremely sophisticated to look beautiful. To convey ideas effectively, both aesthetic form and functionality need to go hand in hand, providing insights into a rather sparse and complex data set by communicating its key-aspects in a more intuitive way. Yet designers often tend to discard the balance between design and function, creating gorgeous data visualizations which fail to serve its main purpose — communicate information. 
+```
+
+确实，对于可视化系统而言，炫不是重要的，但是丑也不是必然的。是相对讨论问题的，事实上，应该知道的是，数据可视化需要一个好的问题的切入，而我对于弹幕的切入，显然是这个视频的弹幕分布是什么样子的，在哪里的弹幕是最多的？（也许是视频的高潮？也许是视频的重点？）这些弹幕有什么的特点？等等。
+
+而在本项目中，设计的Column很多都可以作为可视化的项目，可以认为其是高维数据。因此本项目舍弃了D3作为可视化的工具，转而使用了[DC.js](#citation)作为可视化的框架。此外，前段的展示本项目使用了Bootstrap进行定制，事实上SASS对于前段我个人认为是革命性的，大量的重复劳动可以被组件化后减少，这也是当前前端发展的重要特点。为了保持项目主题的特点，本项目移植了许多的B站本身的元素。
+
+![](http://ww4.sinaimg.cn/mw690/006C73MUjw1faae652xibj31400izjwh.jpg)
+![](http://ww1.sinaimg.cn/mw690/006C73MUjw1faae6559x7j31400iz11o.jpg)
+
+
 ### 机器学习
 
+暂时没有，没有人标记数据校验。
+想法包括弹幕分类（过滤无意义的弹幕）,弹幕情感识别（爆炸黑子），弹幕自动生成（刷视频的人气 2333），有时间会尝试做一个。
 
 ## 检索系统
 
@@ -226,11 +245,9 @@ K的定义中可以看到，参数b的作用是调整文档长度对相关性影
 
 但是显然这样的结果不够令人满意，我需要实现一个交互的系统，更好的HCI，否则我觉得自己PKU白上那么多课程了。于是，希望借鉴dc.js在[examples](https://dc-js.github.io/dc.js/#monthly-volume-chart)上的效果，实现一个动态的视频弹幕统计系统。
 
-时间是一晚上，大概是3个小时左右。
-
-
 
 ### 检索页面 
+![](http://ww2.sinaimg.cn/mw690/006C73MUjw1faae653abrj31400iz79h.jpg)
 
 
 ### 其他
@@ -243,4 +260,9 @@ K的定义中可以看到，参数b的作用是调整文档长度对相关性影
 
 #<span id="#citation">参考信息</span>
 [1].[弹幕信息](https://lintmx.com/bi-li-bi-li-dan-mu-fen-xi/):https://lintmx.com/bi-li-bi-li-dan-mu-fen-xi/
+
 [2]. [哔哩哔哩真实视频地址解析-初探](http://blog.csdn.net/qyvlik/article/details/49473489)
+
+[3]. [you-get](https://github.com/soimort/you-get)
+
+[4] [whoosh](https://pypi.python.org/pypi/Whoosh/)
