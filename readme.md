@@ -251,6 +251,7 @@ K的定义中可以看到，参数b的作用是调整文档长度对相关性影
 ### 检索页面 
 ![](http://ww2.sinaimg.cn/mw690/006C73MUjw1faae653abrj31400iz79h.jpg)
 
+[demo](http://123.206.83.147:50000/)如果你喜欢的话，欢迎关注(黄婷婷应援会)[http://weibo.com/u/3547335927]，敬上你的绵薄之力。谢谢了
 
 ### 其他
 之前一直遇到“OperationalError (2006, 'MySQL server has gone away')”的错误，改了很多方法，包括
