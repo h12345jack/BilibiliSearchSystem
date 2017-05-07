@@ -256,7 +256,7 @@ K的定义中可以看到，参数b的作用是调整文档长度对相关性影
 ### 检索页面 
 ![](http://ww2.sinaimg.cn/mw690/006C73MUjw1faae653abrj31400iz79h.jpg)
 
-[Demo](http://123.206.83.147:50000/)
+[Demo](http://bilibili.h12345jack.me/)
 
 如果你喜欢的话，欢迎关注[黄婷婷应援会](http://weibo.com/u/3547335927)。谢谢了
 

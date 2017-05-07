@@ -53,7 +53,10 @@ class BilispiderSpider(scrapy.Spider):
         results = self.cursor.fetchall()
         if len(results) > 0:
             for i in results:
-                self.start_urls.append(i[0])
+                url = i[0]
+                if url.startswith('//'):
+                    url = 'http:' + url
+                self.start_urls.append(url)
         
 
     def __init__(self, *args, **kwargs):
