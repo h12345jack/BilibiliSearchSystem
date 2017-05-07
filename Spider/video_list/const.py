@@ -110,8 +110,9 @@ APPKEY = 'f3bb208b3d081dc8'
 SECRETKEY_MINILOADER = '1c15888dc316e05a15fdd0a02ed6584f'
 
 DEFAULT_SQL = """
-CREATE DATABASE IF NOT EXISTS XFS_DB charset=utf8;;
-CREATE TABLE IF NOT EXISTS query_table(
+CREATE DATABASE IF NOT EXISTS XFS_DB charset=utf8;
+
+CREATE TABLE IF NOT EXISTS XFS_DB.query_table(
     aid int primary key,
     query_word char(100) not null, 
     page_num int,
@@ -120,10 +121,11 @@ CREATE TABLE IF NOT EXISTS query_table(
     video_matrix varchar(10000)
 ) charset=utf8;
 
-CREATE TABLE IF NOT EXISTS need_crawl_url(
+CREATE TABLE IF NOT EXISTS XFS_DB.need_crawl_url(
     aid int primary key,
     url varchar(1000),
     create_time int,
     finished_time int default 0
 )charset=utf8;
+m
 """
