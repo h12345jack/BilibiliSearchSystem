@@ -33,7 +33,7 @@ logging.basicConfig(level=logging.DEBUG,
 def mysql_init():
     connection = MySQLdb.connect(
                  host = MYSQL_CONFIG['HOST'],
-                 usesr = MYSQL_CONFIG['USER'],
+                 user = MYSQL_CONFIG['USER'],
                  password = MYSQL_CONFIG['PASSWORD'],
                  db = MYSQL_CONFIG['DATABASE']
                 )
@@ -49,11 +49,12 @@ def mysql_init():
 
 
 def mysql_cursor():
-    host = 'localhost'
-    user = 'root'
-    password = 'admin'
-    db = 'XFS_DB'
-    connection = MySQLdb.connect(host, user, password, db)
+    connection = MySQLdb.connect(
+                 host = MYSQL_CONFIG['HOST'],
+                 user = MYSQL_CONFIG['USER'],
+                 password = MYSQL_CONFIG['PASSWORD'],
+                 db = MYSQL_CONFIG['DATABASE']
+                )
     cursor = connection.cursor()
     connection.set_character_set('utf8')
     cursor.execute('SET NAMES utf8;')
