@@ -11,7 +11,7 @@
 *.sql
 Search_system/index_dir
 Analysis/*.txt
-env
+venv
 !Search_system/templates/*.html
 !Search_system/static
 !Search_system/dictionary
