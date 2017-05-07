@@ -118,6 +118,11 @@ def insert2mysql(fpath,cursor,connection):
             except  MySQLdb.Error,e:
                 if not str(e.args[0]) == "1062":
                     print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
+                    return 
+                print e
+            else:
+                print fpath,'write 2 db'
+
 
 
 
@@ -175,7 +180,7 @@ def crawler_special(keyword):
         tag_url = "http://www.bilibili.com/sppage/tag-hot-{}-{}.html".format(
             spid, page)
         logging.info(tag_url)
-        
+
         content = requests.get(tag_url, headers=HEADERS).content
         filename = keyword + "_" + str(page)+'.html'
         file_path = os.path.join(QUERY_SP, filename)
@@ -266,6 +271,7 @@ def step1():
         crawler_keyword(k)
     
     sp_list = [u"SNH48",u"李艺彤",u"黄婷婷"]
+
     for sp in keyword:
         crawler_special(sp)
     extract_url_from_sp()
