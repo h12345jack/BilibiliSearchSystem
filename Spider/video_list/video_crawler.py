@@ -260,9 +260,10 @@ def step2():
 
 
 def main():
+    step1()
+    step2()
     for k in HTT_QUERY:
         crawler_keyword(k)
 
 if __name__ == '__main__':
-    xml_downloader("8150643")
-
+   main()
