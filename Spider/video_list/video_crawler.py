@@ -17,7 +17,7 @@ import requests
 from lxml.html import clean
 from lxml import etree
 from const import HEADERS, HTT_QUERY, APPKEY,SECRETKEY_MINILOADER
-from const import DEFAULT_SQL
+from const import DEFAULT_SQL, MYSQL_CONFIG
 from const import XML_DIR, METADATA_DIR, COMMNETS_DIR
 
 
@@ -30,6 +30,22 @@ logging.basicConfig(level=logging.DEBUG,
                     datefmt='%a, %d %b %Y %H:%M:%S',
                     filename='./video.log',
                     filemode='w')
+def mysql_init():
+    connection = MySQLdb.connect(
+                 host = MYSQL_CONFIG['HOST'],
+                 usesr = MYSQL_CONFIG['USER'],
+                 password = MYSQL_CONFIG['PASSWORD'],
+                 db = MYSQL_CONFIG['DATABASE']
+                )
+    cursor = connection.cursor()
+    connection.set_character_set('utf8')
+    cursor.execute('SET NAMES utf8;')
+    cursor.execute('SET CHARACTER SET utf8;')
+    cursor.execute('SET character_set_connection=utf8;')
+    cursor.execute(DEFAULT_SQL)
+    connection.commit()
+    cursor.close()
+    connection.close()
 
 
 def mysql_cursor():
@@ -39,11 +55,10 @@ def mysql_cursor():
     db = 'XFS_DB'
     connection = MySQLdb.connect(host, user, password, db)
     cursor = connection.cursor()
-    connection .set_character_set('utf8')
+    connection.set_character_set('utf8')
     cursor.execute('SET NAMES utf8;')
     cursor.execute('SET CHARACTER SET utf8;')
     cursor.execute('SET character_set_connection=utf8;')
-    cursor.execute(DEFAULT_SQL)
     return cursor, connection
 
 
@@ -263,6 +278,8 @@ def step2():
 
 
 def main():
+    mysql_init()
+    step1()
     for k in HTT_QUERY:
         crawler_keyword(k)
 

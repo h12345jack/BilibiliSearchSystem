@@ -109,6 +109,13 @@ APPKEY = 'f3bb208b3d081dc8'
 
 SECRETKEY_MINILOADER = '1c15888dc316e05a15fdd0a02ed6584f'
 
+MYSQL_CONFIG = {
+    "HOST" : 'localhost',
+    "USER" : 'root',
+    "PASSWORD" : 'admin',
+    "DATABASE" : 'XFS_DB'
+}
+
 DEFAULT_SQL = """
 CREATE DATABASE IF NOT EXISTS XFS_DB charset=utf8;
 
@@ -127,5 +134,5 @@ CREATE TABLE IF NOT EXISTS XFS_DB.need_crawl_url(
     create_time int,
     finished_time int default 0
 )charset=utf8;
-m
+
 """
