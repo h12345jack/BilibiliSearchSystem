@@ -16,7 +16,9 @@ import lxml
 import requests
 from lxml.html import clean
 from lxml import etree
-from const import HEADERS,HTT_QUERY,XML_DIR,METADATA_DIR,COMMNETS_DIR,APPKEY,SECRETKEY_MINILOADER
+from const import HEADERS, HTT_QUERY, APPKEY,SECRETKEY_MINILOADER
+from const import DEFAULT_SQL
+from const import XML_DIR, METADATA_DIR, COMMNETS_DIR
 
 
 QUERY_HTML = 'query_keyword'
@@ -41,6 +43,7 @@ def mysql_cursor():
     cursor.execute('SET NAMES utf8;')
     cursor.execute('SET CHARACTER SET utf8;')
     cursor.execute('SET character_set_connection=utf8;')
+    cursor.execute(DEFAULT_SQL)
     return cursor, connection
 
 
