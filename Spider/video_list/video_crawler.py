@@ -34,7 +34,7 @@ def mysql_init():
     connection = MySQLdb.connect(
                  host = MYSQL_CONFIG['HOST'],
                  user = MYSQL_CONFIG['USER'],
-                 password = MYSQL_CONFIG['PASSWORD'],
+                 passwd = MYSQL_CONFIG['PASSWORD'],
                  db = MYSQL_CONFIG['DATABASE']
                 )
     cursor = connection.cursor()
@@ -52,7 +52,7 @@ def mysql_cursor():
     connection = MySQLdb.connect(
                  host = MYSQL_CONFIG['HOST'],
                  user = MYSQL_CONFIG['USER'],
-                 password = MYSQL_CONFIG['PASSWORD'],
+                 passwd = MYSQL_CONFIG['PASSWORD'],
                  db = MYSQL_CONFIG['DATABASE']
                 )
     cursor = connection.cursor()
