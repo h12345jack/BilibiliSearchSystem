@@ -103,6 +103,21 @@ def insert2json(html, query_word, page_num):
     cursor.close()
     connection.close()
 
+def insert2mysql(fpath,cursor,connection):
+    with codecs.open(fpath,'r','utf8') as f:
+        for lj in f.readlines():
+            json_data = json.loads(lj.strip())
+            json_data["aid"] = "".join(re.findall(r'av([0-9]*)',json_data["video_url"]))
+            sql = "INSERT INTO query_table("
+            sql += ",".join(json_data.keys())
+            sql += ")values("
+            sql += ",".join(["%s" for i in json_data.keys()])+");"
+            try:
+                cursor.execute(sql,json_data.values())
+                connection.commit()
+            except  MySQLdb.Error,e:
+                if not str(e.args[0]) == "1062":
+                    print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
 
 
 
@@ -134,21 +149,7 @@ def crawler_keyword(keyword):
         except Exception as e:
             logging.debug(e)
 
-def insert2mysql(fpath,cursor,connection):
-    with codecs.open(fpath,'r','utf8') as f:
-        for lj in f.readlines():
-            json_data = json.loads(lj.strip())
-            json_data["aid"] = "".join(re.findall(r'av([0-9]*)',json_data["video_url"]))
-            sql = "INSERT INTO query_table("
-            sql += ",".join(json_data.keys())
-            sql += ")values("
-            sql += ",".join(["%s" for i in json_data.keys()])+");"
-            try:
-                cursor.execute(sql,json_data.values())
-                connection.commit()
-            except  MySQLdb.Error,e:
-                if not str(e.args[0]) == "1062":
-                    print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
+
 
 def crawler_special(keyword):
     '''
@@ -173,7 +174,8 @@ def crawler_special(keyword):
     for page in range(1, int(end_page[0])+1):
         tag_url = "http://www.bilibili.com/sppage/tag-hot-{}-{}.html".format(
             spid, page)
-        print tag_url
+        logging.info(tag_url)
+        
         content = requests.get(tag_url, headers=HEADERS).content
         filename = keyword + "_" + str(page)+'.html'
         file_path = os.path.join(QUERY_SP, filename)
@@ -257,31 +259,21 @@ def xml_downloader(cid):
         f.write(requests.get(url).content)
     print fpath
 
-def step1():
-    keyword = [u"黄婷婷"]
-    for k in keyword:
-        crawler_keyword(k)
-    
-    sp_list = [u"黄婷婷"]
-    for sp in keyword:
-        crawler_special(u"黄婷婷")
-    extract_url_from_sp()
 
-def step2():
-    keyword = [u"SNH48",u"李艺彤"]
+def step1():
+    keyword = [u"SNH48",u"李艺彤",u"黄婷婷"]
     for k in keyword:
         crawler_keyword(k)
     
-    sp_list = [u"SNH48",u"李艺彤"]
+    sp_list = [u"SNH48",u"李艺彤",u"黄婷婷"]
     for sp in keyword:
         crawler_special(sp)
     extract_url_from_sp()
 
 
 def main():
-    mysql_init()
+    # mysql_init()
     step1()
-    step2()
     for k in HTT_QUERY:
         crawler_keyword(k)
 
