@@ -117,11 +117,7 @@ def insert2mysql(fpath,cursor,connection):
                 connection.commit()
             except  MySQLdb.Error,e:
                 if not str(e.args[0]) == "1062":
-                    print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
-                    return 
-                print e
-            else:
-                print fpath,'write 2 db'
+                   logging.warning("MySQL Error [%d]: %s" % (e.args[0], e.args[1]))
 
 
 
