@@ -97,7 +97,7 @@ def index():
 
     '''
     对于弹幕信息进行检索，如果lxml解析报错，去掉该文件将不被检索
-    '''
+    ''' 
     
     f_list = os.listdir(XML_DIR)
     schema = Schema(path =ID(stored=True),\
@@ -210,7 +210,7 @@ def query_output(rs):
             data["u_face"] = extract_u_face(data["upinfo"])
             data["r_info"] = extract_r_info(data["upinfo"])
             res.append(data)
-    print
+
     print res[0]["cid"]
     print len(res),"results find!"
     return res
@@ -259,6 +259,17 @@ def extract_r_info(upinfo):
     m = re.findall(r"\<div\s?class=\"r\-info\"\>(.*)\<\/div\><\/div\>",upinfo)
     return ''.join(m)
 
+
+def main():
+    print u'开始索引文件吗？确定输入1'
+    config = raw_input()
+    if config == '1':
+        index()
+    else:
+        print u'取消索引操作'
+        exit(-1)
+
+
 if __name__ == '__main__':
-    query(u"黄宇直")
+    main()
 
